@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BookController extends Controller
 {
@@ -14,9 +15,9 @@ class BookController extends Controller
     public function index()
     {
         //
-        return ("Lista de livros");
+        return view('booklist');
     }
-
+    
     /**
      * Show the form for creating a new resource.
      *
@@ -25,7 +26,9 @@ class BookController extends Controller
     public function create()
     {
         //
-        return ("criar livro(form)");
+        $data = array('action' => 'store',
+                      'msg'    => 'Registrar',);
+        return view('bookform', $data);
     }
 
     /**
@@ -37,6 +40,24 @@ class BookController extends Controller
     public function store(Request $request)
     {
         //
+        $id = DB::table('books')->insertGetId(
+            ['name' => $request->post('name'),
+             'author' => $request->post('author'),
+             'year' => $request->post('year'),
+             'created_at' => DB::raw('now()'),]
+        );
+
+
+
+
+
+        // $book = new Book();
+        // $book->name = $request->get('name');
+        // $book->author = $request->get('author');
+        // $book->year = $request->get('year');
+
+
+        return view('booklist');
     }
 
     /**
@@ -71,6 +92,7 @@ class BookController extends Controller
     public function update(Request $request, $id)
     {
         //
+
     }
 
     /**
