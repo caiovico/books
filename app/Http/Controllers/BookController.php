@@ -47,16 +47,6 @@ class BookController extends Controller
              'created_at' => DB::raw('now()'),]
         );
 
-
-
-
-
-        // $book = new Book();
-        // $book->name = $request->get('name');
-        // $book->author = $request->get('author');
-        // $book->year = $request->get('year');
-
-
         return view('booklist');
     }
 
