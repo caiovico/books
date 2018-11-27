@@ -19,13 +19,6 @@ class CreateBooksTable extends Migration
             $table->string('year');
             $table->timestamps();
         });
-        Schema::create('book_has_authors', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('author_id');
-            $table->unsignedInteger('book_id');
-            $table->foreign('author_id')->references('id')->on('authors');
-            $table->foreign('book_id')->references('id')->on('books');
-        });
     }
 
     /**
@@ -36,6 +29,5 @@ class CreateBooksTable extends Migration
     public function down()
     {
         Schema::dropIfExists('books');
-        Schema::dropIfExists('book_has_authors');
     }
 }

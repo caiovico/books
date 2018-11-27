@@ -1,5 +1,5 @@
 @extends('layouts.stdtemplate')
 
 @section('customContent')
-Status: online.
+        {{$contentTitle}}
 @endsection

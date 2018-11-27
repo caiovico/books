@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use App\Author;
 
-class BookController extends Controller
+class AuthorController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,11 +17,14 @@ class BookController extends Controller
     public function index()
     {
         //
-        $data = array('contentTitle' => 'Lista de Livros',
+        $authors = DB::table('authors')->simplePaginate(2);
+        $data = array('contentTitle' => 'Lista de Autores',
+                      'authors' => $authors,
                      );
-        return view('list', $data);
+        
+        return view('listauthors', $data);
     }
-    
+
     /**
      * Show the form for creating a new resource.
      *
@@ -30,8 +34,8 @@ class BookController extends Controller
     {
         //
         $data = array('new' => True,
-                      'contentTitle'    => 'Registrar Livro',);
-        return view('bookform', $data);
+                      'contentTitle'    => 'Novo Autor',);
+        return view('authorform', $data);
     }
 
     /**
@@ -42,15 +46,11 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        $id = DB::table('books')->insertGetId(
-            ['name' => $request->post('name'),
-             'author' => $request->post('author'),
-             'year' => $request->post('year'),
-             'created_at' => DB::raw('now()'),]
-        );
 
-        return view('booklist');
+        $author = new Author;
+        $author->name = $request->name;
+        $author->save();
+        return $this->index();
     }
 
     /**
@@ -61,9 +61,9 @@ class BookController extends Controller
      */
     public function show($id)
     {
-        //
+        return "o id é $id";
     }
-
+    
     /**
      * Show the form for editing the specified resource.
      *
@@ -72,7 +72,11 @@ class BookController extends Controller
      */
     public function edit($id)
     {
-        //
+        $author = Author::find($id);
+        $data = array('author' => $author,
+                      'contentTitle' => 'Editar Autor(a)',
+                      'new' => True);
+        return view('authorform', $data);
     }
 
     /**
@@ -84,8 +88,11 @@ class BookController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $author = Author::find($id);
+        $author->name = $request->name;
+        $author->save();
 
+        return redirect()->route('author.index');
     }
 
     /**
@@ -96,6 +103,9 @@ class BookController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $author = Author::find($id);
+        $author->delete();
+
+        return redirect()->route('author.index');
     }
 }
