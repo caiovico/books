@@ -16,12 +16,11 @@ class AuthorController extends Controller
      */
     public function index()
     {
-        //
-        $authors = DB::table('authors')->simplePaginate(2);
-        $data = array('contentTitle' => 'Lista de Autores',
-                      'authors' => $authors,
-                     );
-        
+        $data = ['contentTitle' => 'Lista de Autores',
+        'authors' => Author::all()->toJson(),
+        'url' => route('author.index')
+    ];
+        //return var_dump($data);
         return view('listauthors', $data);
     }
 
@@ -33,8 +32,11 @@ class AuthorController extends Controller
     public function create()
     {
         //
-        $data = array('new' => True,
-                      'contentTitle'    => 'Novo Autor',);
+        $data = array('authorName' => "",
+                      'action' => route('author.store'),
+                      'authorId' => "",
+                      'contentTitle' => 'Registrar Autor(a)',
+                      'method' => 'POST');
         return view('authorform', $data);
     }
 
@@ -46,11 +48,11 @@ class AuthorController extends Controller
      */
     public function store(Request $request)
     {
-
+        // Log::info('Showing user profile for user: '.$id);
         $author = new Author;
         $author->name = $request->name;
         $author->save();
-        return $this->index();
+        return redirect()->route('author.index');
     }
 
     /**
@@ -72,10 +74,12 @@ class AuthorController extends Controller
      */
     public function edit($id)
     {
-        $author = Author::find($id);
-        $data = array('author' => $author,
+        $author = Author::findOrFail($id);
+        $data = array('authorName' => $author->name,
+                      'authorId' => $id,
+                      'action' => route('author.index'),
                       'contentTitle' => 'Editar Autor(a)',
-                      'new' => True);
+                      'method' => 'PUT');
         return view('authorform', $data);
     }
 
@@ -92,7 +96,8 @@ class AuthorController extends Controller
         $author->name = $request->name;
         $author->save();
 
-        return redirect()->route('author.index');
+        return var_dump($author);
+        return redirect('author');
     }
 
     /**
@@ -103,9 +108,11 @@ class AuthorController extends Controller
      */
     public function destroy($id)
     {
+
         $author = Author::find($id);
         $author->delete();
-
+        $author->save();
+        return $author;
         return redirect()->route('author.index');
     }
 }
