@@ -1,10 +1,8 @@
 <template>
-    <form :action="outAction+'/'+authorId" :method="outMethod">
+    <form :action="outAction" method="POST">
         <slot>
-            <!-- Space for csrf token from Laravel -->
+            <!-- Space for csrf token  and method (PUT) from Laravel -->
         </slot>
-        
-        
         <input type="hidden" name="id" :value="outName">
         <input type="text" name="name" v-model="outName">
         <input type="submit" value="Enviar">
@@ -14,13 +12,12 @@
 export default {
     data () {
         return{
-            outAction: this.action,
-            outMethod: this.method,
+            outAction: this.action+"/"+this.authorId,
             outName: this.authorName,
         }
     },
     name: 'AuthorFormComponent',
     props:
-        ['authorName', 'authorId', 'action', 'method'],
+        ['authorName', 'authorId', 'action'],
 }    
 </script>

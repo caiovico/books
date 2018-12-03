@@ -3,7 +3,9 @@
 @section('customContent')
     <author-form-component 
     action={{$action}} 
-    method={{$method}} 
     author-name="{{$authorName}}"
-    author-id="{{$authorId}}">@csrf</author-form-component>
+    author-id="{{$authorId}}">
+        {{method_field($method)}}
+        @csrf
+    </author-form-component>
 @endsection

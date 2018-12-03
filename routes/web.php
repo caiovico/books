@@ -22,4 +22,4 @@ Route::resource('book', 'BookController');
 // ->name('book');
 
 // Author Routes
-Route::resource('author', 'AuthorController');
+Route::resource('author', 'AuthorController')->middleware("auth");

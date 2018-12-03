@@ -47512,18 +47512,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      outAction: this.action,
-      outMethod: this.method,
+      outAction: this.action + "/" + this.authorId,
       outName: this.authorName
     };
   },
   name: 'AuthorFormComponent',
-  props: ['authorName', 'authorId', 'action', 'method']
+  props: ['authorName', 'authorId', 'action']
 });
 
 /***/ }),
@@ -47536,12 +47533,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "form",
-    {
-      attrs: {
-        action: _vm.outAction + "/" + _vm.authorId,
-        method: _vm.outMethod
-      }
-    },
+    { attrs: { action: _vm.outAction, method: "POST" } },
     [
       _vm._t("default"),
       _vm._v(" "),
@@ -47661,11 +47653,45 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'AuthorListComponent',
   props: ['listAuthors', 'defaultUrl'],
   data: function data() {
     return {
+      urlDeleteForm: "",
+      idToDestroy: -1,
+      nameToDestroy: "",
       filter: "",
       url: this.defaultUrl,
       authors: JSON.parse(this.listAuthors)
@@ -47684,9 +47710,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     edit: function edit(id) {
       return window.location.href = this.url + '/' + id + '/editar';
     },
-    destroy: function destroy(id) {
-      axios.delete(this.url + '/' + id);
-      authors.delete();
+    destroy: function destroy(id, name) {
+      this.urlDeleteForm = this.url + '/' + id;
+      this.nameToDestroy = name;
+      this.idToDestroy = id;
     }
   }
 });
@@ -47699,7 +47726,9 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("table", { staticClass: "table table-striped" }, [
+  return _c("div", [
+    _c("label", { attrs: { for: "searchInput" } }, [_vm._v("Filtrar: ")]),
+    _vm._v(" "),
     _c("input", {
       directives: [
         {
@@ -47709,7 +47738,7 @@ var render = function() {
           expression: "filter"
         }
       ],
-      attrs: { type: "text" },
+      attrs: { name: "searchInput", type: "text" },
       domProps: { value: _vm.filter },
       on: {
         input: function($event) {
@@ -47721,45 +47750,133 @@ var render = function() {
       }
     }),
     _vm._v(" "),
-    _vm._m(0),
-    _vm._v(" "),
-    _c(
-      "tbody",
-      _vm._l(_vm.filterAuthors, function(author) {
-        return _c("tr", [
-          _c("td", [_vm._v(_vm._s(author.name))]),
-          _vm._v(" "),
-          _c("td", [
-            _c("div", [
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-secondary btn-lg active",
-                  on: {
-                    click: function($event) {
-                      _vm.edit(author.id)
+    _c("table", { staticClass: "table table-striped" }, [
+      _vm._m(0),
+      _vm._v(" "),
+      _c(
+        "tbody",
+        _vm._l(_vm.filterAuthors, function(author) {
+          return _c("tr", [
+            _c("td", [_vm._v(_vm._s(author.name))]),
+            _vm._v(" "),
+            _c("td", [
+              _c("div", [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-secondary btn-lg active",
+                    on: {
+                      click: function($event) {
+                        _vm.edit(author.id)
+                      }
                     }
-                  }
-                },
-                [_vm._v("Editar")]
-              ),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-secondary btn-lg active",
-                  on: {
-                    click: function($event) {
-                      _vm.destroy(author.id)
+                  },
+                  [_vm._v("Editar")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary btn-lg active",
+                    attrs: {
+                      "data-toggle": "modal",
+                      "data-target": "#deleteFormModal"
+                    },
+                    on: {
+                      click: function($event) {
+                        _vm.destroy(author.id, author.name)
+                      }
                     }
-                  }
-                },
-                [_vm._v("Apagar")]
-              )
+                  },
+                  [_vm._v("Apagar")]
+                )
+              ])
             ])
           ])
-        ])
-      })
+        })
+      )
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "deleteFormModal",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "deleteFormModalLabel",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _c("div", { staticClass: "modal-header" }, [
+                _c(
+                  "h5",
+                  {
+                    staticClass: "modal-title",
+                    attrs: { id: "deleteFormModalLabel" }
+                  },
+                  [_vm._v("Apagar Autor " + _vm._s(_vm.idToDestroy))]
+                ),
+                _vm._v(" "),
+                _vm._m(1)
+              ]),
+              _vm._v(" "),
+              _c(
+                "form",
+                { attrs: { method: "POST", action: _vm.urlDeleteForm } },
+                [
+                  _c(
+                    "div",
+                    { staticClass: "modal-body" },
+                    [
+                      _vm._t("default"),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.idToDestroy,
+                            expression: "idToDestroy"
+                          }
+                        ],
+                        attrs: { type: "hidden", name: "id" },
+                        domProps: { value: _vm.idToDestroy },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.idToDestroy = $event.target.value
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("span", [
+                        _vm._v(
+                          "Deseja apagar o(a) autor(a) " +
+                            _vm._s(_vm.nameToDestroy) +
+                            "?"
+                        )
+                      ])
+                    ],
+                    2
+                  ),
+                  _vm._v(" "),
+                  _vm._m(2)
+                ]
+              )
+            ])
+          ]
+        )
+      ]
     )
   ])
 }
@@ -47774,6 +47891,43 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Opções")])
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "modal",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-footer" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-secondary",
+          attrs: { type: "button", "data-dismiss": "modal" }
+        },
+        [_vm._v("Cancelar")]
+      ),
+      _vm._v(" "),
+      _c("input", {
+        staticClass: "btn btn-primary",
+        attrs: { type: "submit", value: "Sim" }
+      })
     ])
   }
 ]
